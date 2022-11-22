@@ -17,6 +17,19 @@ public class RestToken {
                 .path("token")
                 .toString();
     }
+
+    public static String addNullToken(String body) {
+        return RestAssured.given()
+                .baseUri(baseUri)
+                .body(body)
+                .contentType(ContentType.JSON)
+                .post(baseUri)
+                .then()
+                .statusCode(400)
+                .extract()
+                .response()
+                .toString();
+    }
 }
 
 
