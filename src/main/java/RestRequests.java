@@ -1,10 +1,11 @@
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 
 public class RestRequests {
     static String baseUri = "https://restful-booker.herokuapp.com/booking/";
 
-    public static String addBookingId(String body) {
+    public static Response addBooking(String body, int status) {
         return RestAssured.given()
                 .baseUri(baseUri)
                 .log()
@@ -13,25 +14,14 @@ public class RestRequests {
                 .contentType(ContentType.JSON)
                 .post(baseUri)
                 .then()
-                .statusCode(200)
+                .statusCode(status)
                 .extract()
-                .response()
-                .path("bookingid")
-                .toString();
+                .response();
     }
 
-    public static String addNullBookingId(String body) {
-        return RestAssured.given()
-                .baseUri(baseUri)
-                .log()
-                .body(true)
-                .body(body)
-                .contentType(ContentType.JSON)
-                .post(baseUri)
-                .then()
-                .statusCode(400)
-                .extract()
-                .response()
+    public static String addBookingAndGetId(String body, int status) {
+        return RestRequests.addBooking(body, status)
+                .path("bookingid")
                 .toString();
     }
 
@@ -42,18 +32,6 @@ public class RestRequests {
                 .get(id)
                 .then()
                 .statusCode(status)
-                .extract()
-                .response()
-                .toString();
-    }
-
-    public static String findByNullId(String id) {
-        return RestAssured.given()
-                .baseUri(baseUri)
-                .contentType(ContentType.JSON)
-                .get(id)
-                .then()
-                .statusCode(404)
                 .extract()
                 .response()
                 .toString();
@@ -78,8 +56,8 @@ public class RestRequests {
                 .toString();
     }
 
-    public static void deleteBooking(String id, String token) {
-        RestAssured.given()
+    public static Response deleteBooking(String id, String token, int status) {
+        return RestAssured.given()
                 .baseUri(baseUri)
                 .headers("Cookie", "token=" + token)
                 .when()
@@ -87,21 +65,7 @@ public class RestRequests {
                 .then()
                 .log()
                 .body()
-                .statusCode(201)
-                .extract()
-                .response();
-    }
-
-    public static void deleteNullBooking(String id, String token) {
-        RestAssured.given()
-                .baseUri(baseUri)
-                .headers("Cookie", "token=" + token)
-                .when()
-                .delete(id)
-                .then()
-                .log()
-                .body()
-                .statusCode(403)
+                .statusCode(status)
                 .extract()
                 .response();
     }

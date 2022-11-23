@@ -1,33 +1,25 @@
 import io.restassured.http.ContentType;
 import io.restassured.RestAssured;
+import io.restassured.response.Response;
 
 public class RestToken {
     static String baseUri = "https://restful-booker.herokuapp.com/auth";
 
-    public static String addToken(String body) {
+    public static Response addNullToken(String body, int status) {
         return RestAssured.given()
                 .baseUri(baseUri)
                 .body(body)
                 .contentType(ContentType.JSON)
                 .post(baseUri)
                 .then()
-                .statusCode(200)
+                .statusCode(status)
                 .extract()
-                .response()
-                .path("token")
-                .toString();
+                .response();
     }
 
-    public static String addNullToken(String body) {
-        return RestAssured.given()
-                .baseUri(baseUri)
-                .body(body)
-                .contentType(ContentType.JSON)
-                .post(baseUri)
-                .then()
-                .statusCode(400)
-                .extract()
-                .response()
+    public static String addToken(String body, int status) {
+        return RestToken.addNullToken(body, status)
+                .path("token")
                 .toString();
     }
 }

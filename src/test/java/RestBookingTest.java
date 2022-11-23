@@ -1,5 +1,7 @@
 import java.util.logging.Logger;
+
 import org.junit.Test;
+
 public class RestBookingTest {
     Logger logger
             = Logger.getLogger(
@@ -12,7 +14,7 @@ public class RestBookingTest {
                 "    \"password\" : \"password123\"\n" +
                 "}";
 
-        String token = RestToken.addToken(bodyAdd);
+        String token = RestToken.addToken(bodyAdd, 200);
         logger.info("token " + token);
     }
 
@@ -29,8 +31,8 @@ public class RestBookingTest {
             "}";
 
     @Test
-    public void addBookingId() {
-        String id = RestRequests.addBookingId(bodyAddBooking);
+    public void addBooking() {
+        String id = RestRequests.addBookingAndGetId(bodyAddBooking, 200);
         logger.info("Создано бронирование с id " + id);
 
         RestRequests.findById(id);
@@ -51,7 +53,7 @@ public class RestBookingTest {
                 "            \"additionalneeds\": \"Breakfast\"\n" +
                 "        }";
 
-        String id = RestRequests.addBookingId(bodyAddBooking);
+        String id = RestRequests.addBookingAndGetId(bodyAddBooking, 200);
         logger.info("Создано бронирование с id " + id);
 
         RestRequests.updateBooking(bodyUpdateBooking);
@@ -68,14 +70,14 @@ public class RestBookingTest {
                 "    \"password\" : \"password123\"\n" +
                 "}";
 
-        String token = RestToken.addToken(bodyAdd);
+        String token = RestToken.addToken(bodyAdd, 200);
 
-        String id = RestRequests.addBookingId(bodyAddBooking);
+        String id = RestRequests.addBookingAndGetId(bodyAddBooking, 200);
         logger.info("Создано бронирование с id " + id);
 
         RestRequests.findById(id);
 
-        RestRequests.deleteBooking(id, token);
+        RestRequests.deleteBooking(id, token, 201);
         logger.info("Удалили бронирование с id " + id);
 
         RestRequests.findById(id, 404);

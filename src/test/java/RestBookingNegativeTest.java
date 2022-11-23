@@ -1,4 +1,5 @@
 import org.junit.Test;
+
 import java.util.logging.Logger;
 
 public class RestBookingNegativeTest {
@@ -6,25 +7,25 @@ public class RestBookingNegativeTest {
 
     @Test
     public void addNullToken() {
-        RestToken.addNullToken("password : password123456");
+        RestToken.addNullToken("password : password123456", 400);
         logger.info("Неверный пароль");
     }
 
     @Test
-    public void addNullBookingId() {
-        RestRequests.addNullBookingId("firstname : Василий");
+    public void addNullBooking() {
+        RestRequests.addBooking("firstname : Василий", 400);
         logger.info("Неверное имя");
     }
 
     @Test
     public void findByNullId() {
-        RestRequests.findByNullId("bookingId:000000007");
+        RestRequests.findById("bookingId:000000007", 404);
         logger.info("Неверный id");
     }
 
     @Test
     public void deleteByNullId() {
-        RestRequests.deleteNullBooking("20000000", "0");
+        RestRequests.deleteBooking("20000000", "0", 403);
         logger.info("Несуществующий id");
     }
 }
