@@ -1,9 +1,11 @@
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 
 public class RestRequests {
     static String baseUri = "https://restful-booker.herokuapp.com/booking/";
-    public static String addBookingId(String body) {
+
+    public static Response addBooking(String body, int status) {
         return RestAssured.given()
                 .baseUri(baseUri)
                 .log()
@@ -12,12 +14,17 @@ public class RestRequests {
                 .contentType(ContentType.JSON)
                 .post(baseUri)
                 .then()
-                .statusCode(200)
+                .statusCode(status)
                 .extract()
-                .response()
+                .response();
+    }
+
+    public static String addBookingAndGetId(String body, int status) {
+        return RestRequests.addBooking(body, status)
                 .path("bookingid")
                 .toString();
     }
+
     public static String findById(String id, int status) {
         return RestAssured.given()
                 .baseUri(baseUri)
@@ -29,9 +36,11 @@ public class RestRequests {
                 .response()
                 .toString();
     }
+
     public static String findById(String id) {
         return findById(id, 200);
     }
+
     public static String updateBooking(String body) {
         return RestAssured.given()
                 .baseUri(baseUri)
@@ -46,8 +55,9 @@ public class RestRequests {
                 .response()
                 .toString();
     }
-    public static void deleteBooking(String id, String token) {
-        var res = RestAssured.given()
+
+    public static Response deleteBooking(String id, String token, int status) {
+        return RestAssured.given()
                 .baseUri(baseUri)
                 .headers("Cookie", "token=" + token)
                 .when()
@@ -55,7 +65,7 @@ public class RestRequests {
                 .then()
                 .log()
                 .body()
-                .statusCode(201)
+                .statusCode(status)
                 .extract()
                 .response();
     }
